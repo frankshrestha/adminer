@@ -331,10 +331,10 @@ if (!$columns && support("table")) {
 						$column = idf_escape($key);
 						$href = remove_from_uri('(order|desc)[^=]*|page') . '&order%5B0%5D=' . urlencode($key);
 						$desc = "&desc%5B0%5D=1";
-						echo "<th id='th[" . h(bracket_escape($key)) . "]'>" . script("mixin(qsl('th'), {onmouseover: partial(columnMouse), onmouseout: partial(columnMouse, ' hidden')});", "");
+						echo "<th id='th[" . h(bracket_escape($key)) . "]'>"/*  . script("mixin(qsl('th'), {onmouseover: partial(columnMouse), onmouseout: partial(columnMouse, ' hidden')});", "") */;
 						echo '<a href="' . h($href . ($order[0] == $column || $order[0] == $key || (!$order && $is_group && $group[0] == $column) ? $desc : '')) . '">'; // $order[0] == $key - COUNT(*)
 						echo apply_sql_function($val["fun"], $name) . "</a>"; //! columns looking like functions
-						echo "<span class='column hidden'>";
+						echo "<span class='column'>";
 						echo "<a href='" . h($href . $desc) . "' title='" . lang('descending') . "' class='text'> ↓</a>";
 						if (!$val["fun"]) {
 							echo '<a href="#fieldset-search" title="' . lang('Search') . '" class="text jsonly"> =</a>';
@@ -430,7 +430,7 @@ if (!$columns && support("table")) {
 								$link .= where_link($i++, $k, $v);
 							}
 						}
-						
+
 						$val = select_value($val, $link, $field, $text_length);
 						$id = h("val[$unique_idf][" . bracket_escape($key) . "]");
 						$value = $_POST["val"][$unique_idf][bracket_escape($key)];
@@ -491,7 +491,7 @@ if (!$columns && support("table")) {
 					echo "\n";
 				}
 			}
-			
+
 			echo "<div class='footer'><div>\n";
 			if ($rows || $page) {
 				if ($pagination) {
@@ -523,7 +523,7 @@ if (!$columns && support("table")) {
 					}
 					echo "</fieldset>\n";
 				}
-				
+
 				echo "<fieldset>";
 				echo "<legend>" . lang('Whole result') . "</legend>";
 				$display_rows = ($exact_count ? "" : "~ ") . $found_rows;

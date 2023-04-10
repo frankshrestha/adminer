@@ -662,7 +662,7 @@ function ajaxForm(form, message, button) {
 		}
 	}
 	data = data.join('&');
-	
+
 	var url = form.action;
 	if (!/post/i.test(form.method)) {
 		url = url.replace(/\?.*/, '') + '?' + data;
@@ -911,3 +911,22 @@ oninput = function (event) {
 	var maxLength = target.getAttribute('data-maxlength');
 	alterClass(target, 'maxlength', target.value && maxLength != null && target.value.length > maxLength); // maxLength could be 0
 };
+
+/** Copy column name to the clipboard
+* @param string
+* @return boolean
+*/
+function copyColumnNameToClipboard(name) {
+    if (navigator.clipboard !== undefined) {
+        navigator.clipboard.writeText(`\`${name}\``);
+    } else {
+        const textarea = document.createElement('textarea');
+
+        textarea.value = `\`${name}\``;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    }
+    return true;
+}

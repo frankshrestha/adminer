@@ -852,3 +852,19 @@ addEvent(document, 'click', event => {
 		alterClass(qs('#foot'), 'foot', true);
 	}
 });
+
+function copyColumnName(event, columnName) {
+
+    event.preventDefault();
+    columnName = `\`${columnName}\``;
+
+    if (!navigator.clipboard?.writeText(columnName)) {
+        const input = document.createElement('input');
+
+        input.value = columnName;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+    }
+}

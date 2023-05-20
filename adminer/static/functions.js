@@ -913,20 +913,72 @@ oninput = function (event) {
 };
 
 /** Copy column name to the clipboard
-* @param string
-* @return boolean
-*/
-function copyColumnNameToClipboard(name) {
-    if (navigator.clipboard !== undefined) {
-        navigator.clipboard.writeText(`\`${name}\``);
-    } else {
-        const textarea = document.createElement('textarea');
+ * @param MouseEvent
+ * @param string
+ */
+async function copyColumnNameToClipboard(event, fieldName) {
+    let clipText;
 
-        textarea.value = `\`${name}\``;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
+    switch (true) {
+        case event.shiftKey && event.altKey:
+            try {
+                clipText = await navigator.clipboard.readText();
+            } catch (error) {
+                console.log('Clipboard permission missing.');
+            }
+
+            let readPermission = await navigator.permissions.query({ name: 'clipboard-read' });
+            if (readPermission.state !== 'granted') return;
+
+            switch (true) {
+                case clipText.startsWith('`'):
+                    clipText += `, \`${fieldName}\``;
+                    break;
+
+                case clipText.startsWith("'"):
+                    clipText += `, '${fieldName}'`;
+                    break;
+
+                default:
+                    clipText += `, ${fieldName}`;
+                    break;
+            }
+            break;
+
+        case event.shiftKey:
+            clipText = `\`${fieldName}\``;
+            break;
+
+        case event.altKey:
+            clipText = `'${fieldName}'`;
+            break;
+
+        default:
+            clipText = fieldName;
+            break;
     }
-    return true;
+
+    copyToClipboard(clipText);
+}
+
+/** Copy content to the clipboard
+ * @param string
+ */
+function copyToClipboard(content) {
+
+    switch (true) {
+        case navigator.clipboard !== undefined:
+            navigator.clipboard.writeText(content);
+            break;
+
+        default:
+            const textarea = document.createElement('textarea');
+
+            textarea.value = content;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            break;
+    }
 }

@@ -961,6 +961,29 @@ async function copyColumnNameToClipboard(event, fieldName) {
     copyToClipboard(clipText);
 }
 
+/** Copy fields to the clipboard
+ * @param MouseEvent
+ * @param string
+ */
+function copyFieldsToClipboard(event, match) {
+
+    let selector = match === 'Select:' ? 'th > a > span' : 'div.scrollable > table > tbody > tr > th';
+    let elements = document.querySelectorAll(selector);
+
+    if (!elements) return;
+
+    let fields = {};
+    elements.forEach(element => (fields[element.innerHTML] = ''));
+
+    let clipText = JSON.stringify(fields, null, 4);
+
+    if (event.altKey) {
+        clipText = `[${Object.entries(fields).map(([key, value]) => `\n    '${key}' => '${value}'`)}` + '\n]';
+    }
+
+    copyToClipboard(clipText);
+}
+
 /** Copy content to the clipboard
  * @param string
  */

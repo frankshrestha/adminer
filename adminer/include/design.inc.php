@@ -116,7 +116,15 @@ const thousandsSeparator = '" . js_escape(lang(',')) . "';")
 			echo "$title\n";
 		}
 	}
-	echo "<h2>$title_all</h2>\n";
+	echo "<h2>$title_all";
+
+	$show = isset($_GET['select']) ? 'select' : (isset($_GET['table']) ? 'table' : null);
+
+	if ($show) {
+		echo '<a href="#" title="' . lang('Copy') . '" class="text"> &#128203</a>';
+		echo script('qsl("a").onclick = partialArg(copyFields, ' . "'{$show}');", '');
+	}
+	echo "</h2>\n";
 	echo "<div id='ajaxstatus' class='jsonly hidden'></div>\n";
 	restart_session();
 	page_messages($error);

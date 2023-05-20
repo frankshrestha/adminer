@@ -854,6 +854,39 @@ addEvent(document, 'click', event => {
 	}
 });
 
+/** Copy fields
+ * @param MouseEvent
+ * @param string
+ */
+function copyFields(event, match) {
+	event.preventDefault();
+
+	const selector = match === 'select' ? 'th > a > span' : 'div.scrollable > table > tbody > tr > th';
+
+	const elements = document.querySelectorAll(selector);
+	if (!elements) {
+		return;
+	}
+
+	const fields = Array.from(elements).map(el => el.innerText.trim());
+	let content;
+
+	switch (true) {
+		case event.shiftKey:
+			content = `[\n\t${fields.map(k => `'${k}' => ''`).join(',\n\t')}\n]`;
+			break;
+
+		case event.altKey:
+			content = JSON.stringify(Object.fromEntries(fields.map(k => [k, ''])), null, 4);
+			break;
+
+		default:
+			content = fields.map(f => '`' + f + '`').join(', ');
+			break;
+	}
+	copyToClipboard(content);
+}
+
 /**
  * @param string
  */

@@ -932,15 +932,15 @@ async function copyColumnNameToClipboard(event, fieldName) {
 
             switch (true) {
                 case clipText.startsWith('`'):
-                    clipText += `, \`${fieldName}\``;
+                    clipText += `,\u0020\`${fieldName}\``;
                     break;
 
                 case clipText.startsWith("'"):
-                    clipText += `, '${fieldName}'`;
+                    clipText += `,\u0020'${fieldName}'`;
                     break;
 
                 default:
-                    clipText += `, ${fieldName}`;
+                    clipText += `,\u0020${fieldName}`;
                     break;
             }
             break;
@@ -978,7 +978,10 @@ function copyFieldsToClipboard(event, match) {
     let clipText = JSON.stringify(fields, null, 4);
 
     if (event.altKey) {
-        clipText = `[${Object.entries(fields).map(([key, value]) => `\n    '${key}' => '${value}'`)}` + '\n]';
+        clipText =
+            `[${Object.entries(fields).map(
+                ([key, value]) => `\n\u0020\u0020\u0020\u0020'${key}'\u0020=>\u0020'${value}'`
+            )}` + '\n]';
     }
 
     copyToClipboard(clipText);

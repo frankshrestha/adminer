@@ -58,7 +58,7 @@ if (!is_view($table_status)) {
 		$foreign_keys = foreign_keys($TABLE);
 		if ($foreign_keys) {
 			echo "<table>\n";
-			echo "<thead><tr><th>" . lang('Source') . "<td>" . lang('Target') . "<td>" . lang('ON DELETE') . "<td>" . lang('ON UPDATE') . "<td></thead>\n";
+			echo "<thead><tr><th>" . lang('Source') . "<td>" . lang('Target') . "<td>" . lang('Key Name') . "<td>" . lang('ON DELETE') . "<td>" . lang('ON UPDATE') . "<td></thead>\n";
 			foreach ($foreign_keys as $name => $foreign_key) {
 				echo "<tr title='" . h($name) . "'>";
 				echo "<th><i>" . implode("</i>, <i>", array_map('Adminer\h', $foreign_key["source"])) . "</i>";
@@ -73,6 +73,7 @@ if (!is_view($table_status)) {
 					. "</a>"
 				;
 				echo "(<i>" . implode("</i>, <i>", array_map('Adminer\h', $foreign_key["target"])) . "</i>)";
+				echo "<td>" . urlencode($name);
 				echo "<td>" . h($foreign_key["on_delete"]);
 				echo "<td>" . h($foreign_key["on_update"]);
 				echo '<td><a href="' . h(ME . 'foreign=' . urlencode($TABLE) . '&name=' . urlencode($name)) . '">' . lang('Alter') . '</a>';

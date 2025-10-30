@@ -144,3 +144,5 @@ input.wayoff { left: -1000px; position: absolute; }
 	.rtl #breadcrumb { left: auto; right: 1em; }
 	.nowrap td, .nowrap th, td.nowrap { white-space: normal; }
 }
+
+ul#tables { max-height: calc(100vh - 300px); overflow: auto; }

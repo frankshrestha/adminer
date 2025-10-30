@@ -859,47 +859,49 @@ addEvent(document, 'click', event => {
  * @param string
  */
 function copyFields(event, match) {
-    event.preventDefault();
+	event.preventDefault();
 
-    const selector = match === 'Select' ? 'th > a > span' : 'div.scrollable > table > tbody > tr > th';
+	const selector = match === 'Select' ? 'th > a > span' : 'div.scrollable > table > tbody > tr > th';
 
-    const elements = document.querySelectorAll(selector);
-    if (!elements) return;
+	const elements = document.querySelectorAll(selector);
+	if (!elements) {
+		return;
+	}
 
-    const fields = Array.from(elements).map(el => el.innerText.trim());
-    let content;
+	const fields = Array.from(elements).map(el => el.innerText.trim());
+	let content;
 
-    switch (true) {
-        case event.shiftKey:
-            content = `[\n\t${fields.map(k => `'${k}' => ''`).join(',\n\t')}\n]`;
-            break;
+	switch (true) {
+		case event.shiftKey:
+			content = `[\n\t${fields.map(k => `'${k}' => ''`).join(',\n\t')}\n]`;
+			break;
 
-        case event.altKey:
-            content = JSON.stringify(Object.fromEntries(fields.map(k => [k, ''])), null, 4);
-            break;
+		case event.altKey:
+			content = JSON.stringify(Object.fromEntries(fields.map(k => [k, ''])), null, 4);
+			break;
 
-        default:
-            content = fields.map(f => '`' + f + '`').join(',\u0020');
-            break;
-    }
-    copyToClipboard(content);
+		default:
+			content = fields.map(f => '`' + f + '`').join(',\u0020');
+			break;
+	}
+	copyToClipboard(content);
 }
 
 /**
  * @param string
  */
 function copyToClipboard(content) {
-    localStorage.setItem('content', content);
+	localStorage.setItem('content', content);
 
-    if (!navigator.clipboard?.writeText(content)) {
-        const input = document.createElement('input');
+	if (!navigator.clipboard?.writeText(content)) {
+		const input = document.createElement('input');
 
-        input.value = content;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-    }
+		input.value = content;
+		document.body.appendChild(input);
+		input.select();
+		document.execCommand('copy');
+		document.body.removeChild(input);
+	}
 }
 
 /** Copy column name
@@ -907,16 +909,16 @@ function copyToClipboard(content) {
  * @param string
  */
 async function copyColumnName(event, fieldName) {
-    event.preventDefault();
+	event.preventDefault();
 
-    if (event.shiftKey && event.altKey) {
-        const content = localStorage.getItem('content') || '';
-        const quote = ['`', `'`].includes(content[0]) ? content[0] : '';
+	if (event.shiftKey && event.altKey) {
+		const content = localStorage.getItem('content') || '';
+		const quote = ['`', `'`].includes(content[0]) ? content[0] : '';
 
-        return copyToClipboard(`${content},\u0020${quote}${fieldName}${quote}`);
-    }
+		return copyToClipboard(`${content},\u0020${quote}${fieldName}${quote}`);
+	}
 
-    const quote = event.shiftKey ? `'` : event.altKey ? '`' : '';
+	const quote = event.shiftKey ? `'` : event.altKey ? '`' : '';
 
-    return copyToClipboard(`${quote}${fieldName}${quote}`);
+	return copyToClipboard(`${quote}${fieldName}${quote}`);
 }

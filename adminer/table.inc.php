@@ -73,7 +73,7 @@ if (!is_view($table_status)) {
 					. "</a>"
 				;
 				echo "(<i>" . implode("</i>, <i>", array_map('Adminer\h', $foreign_key["target"])) . "</i>)";
-                echo "<td>" . urlencode($name);
+				echo "<td>" . urlencode($name);
 				echo "<td>" . h($foreign_key["on_delete"]);
 				echo "<td>" . h($foreign_key["on_update"]);
 				echo '<td><a href="' . h(ME . 'foreign=' . urlencode($TABLE) . '&name=' . urlencode($name)) . '">' . lang('Alter') . '</a>';

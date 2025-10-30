@@ -356,8 +356,8 @@ if (!$columns && support("table")) {
 						$sortable = isset($field["privileges"]["order"]) || $fun;
 						echo ($sortable ? "<a href='" . h($href . ($order[0] == $column || $order[0] == $key ? $desc : '')) . "'>$fun</a>" : $fun); // $order[0] == $key - COUNT(*)
 						echo "<span class='column'>";
-                        echo "<a href='#' title='" . lang('Copy') . "' class='text'>&#128203</a>";
-                        echo script("qsl('a').onclick = partialArg(copyColumnName, '" . js_escape($key) . "');", "");
+						echo "<a href='#' title='" . lang('Copy') . "' class='text'>&#128203</a>";
+						echo script("qsl('a').onclick = partialArg(copyColumnName, '" . js_escape($key) . "');", "");
 						if ($sortable) {
 							echo "<a href='" . h($href . $desc) . "' title='" . lang('Descending') . "' class='text'> ↓</a>";
 						}

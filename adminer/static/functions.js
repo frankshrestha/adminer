@@ -894,7 +894,7 @@ function copyToClipboard(content) {
 	localStorage.setItem('content', content);
 
 	if (!navigator.clipboard?.writeText(content)) {
-		const input = document.createElement('input');
+		const input = document.createElement('textarea');
 
 		input.value = content;
 		document.body.appendChild(input);

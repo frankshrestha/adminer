@@ -304,7 +304,7 @@ class Adminer {
 			: (preg_match('~json~', $field["type"]) ? "<code class='jush-js'>$val</code>"
 			: $val)
 		));
-		if (preg_match('~blob|bytea|raw|file~', $field["type"]) && !is_utf8($val)) {
+		if (is_blob($field) && !is_utf8($val)) {
 			$return = "<i>" . lang('%d byte(s)', strlen($original)) . "</i>";
 		}
 		return ($link ? "<a href='" . h($link) . "'" . (is_url($link) ? target_blank() : "") . ">$return</a>" : $return);
@@ -668,13 +668,13 @@ class Adminer {
 		}
 		$history[$_GET["db"]][] = array($query, time(), $time); // not DB - $_GET["db"] is changed in database.inc.php //! respect $_GET["ns"]
 		$sql_id = "sql-" . count($history[$_GET["db"]]);
-		$return = "<a href='#$sql_id' class='toggle'>" . lang('SQL command') . "</a>\n";
+		$return = "<a href='#$sql_id' class='toggle'>" . lang('SQL command') . "</a> <a href='' class='jsonly copy'>🗐</a>\n";
 		if (!$failed && ($warnings = driver()->warnings())) {
 			$id = "warnings-" . count($history[$_GET["db"]]);
 			$return = "<a href='#$id' class='toggle'>" . lang('Warnings') . "</a>, $return<div id='$id' class='hidden'>\n$warnings</div>\n";
 		}
 		return " <span class='time'>" . @date("H:i:s") . "</span>" // @ - time zone may be not set
-			. " $return<div id='$sql_id' class='hidden'><pre><code class='jush-" . JUSH . "'>" . shorten_utf8($query, 1000) . "</code></pre>"
+			. " $return<div id='$sql_id' class='hidden'><pre><code class='jush-" . JUSH . "'>" . shorten_utf8($query, 1e4) . "</code></pre>"
 			. ($time ? " <span class='time'>($time)</span>" : '')
 			. (support("sql") ? '<p><a href="' . h(str_replace("db=" . urlencode(DB), "db=" . urlencode($_GET["db"]), ME) . 'sql=&history=' . (count($history[$_GET["db"]]) - 1)) . '">' . lang('Edit') . '</a>' : '')
 			. '</div>'
@@ -703,7 +703,7 @@ class Adminer {
 					}
 				}
 			}
-			if ($key && $functions && !preg_match('~set|blob|bytea|raw|file|bool~', $field["type"])) {
+			if ($key && $functions && !preg_match('~set|bool~', $field["type"]) && !is_blob($field)) {
 				$return .= "/SQL";
 			}
 		}
@@ -717,13 +717,13 @@ class Adminer {
 	* @param ?string $table null in call.inc.php
 	* @param Field $field
 	* @param string $attrs attributes to use inside the tag
+	* @param string|string[]|false|null $value false means original value
 	* @return string custom input field or empty string for default
 	*/
-	function editInput(?string $table, array $field, string $attrs, ?string $value): string {
+	function editInput(?string $table, array $field, string $attrs, $value): string {
 		if ($field["type"] == "enum") {
-			return (isset($_GET["select"]) ? "<label><input type='radio'$attrs value='-1' checked><i>" . lang('original') . "</i></label> " : "")
-				. ($field["null"] ? "<label><input type='radio'$attrs value=''" . ($value !== null || isset($_GET["select"]) ? "" : " checked") . "><i>NULL</i></label> " : "")
-				. enum_input("radio", $attrs, $field, $value, $value === 0 ? 0 : null) // 0 - empty value
+			return (isset($_GET["select"]) ? "<label><input type='radio'$attrs value='orig' checked><i>" . lang('original') . "</i></label> " : "")
+				. enum_input("radio", $attrs, $field, $value, "NULL")
 			;
 		}
 		return "";
@@ -843,7 +843,7 @@ class Adminer {
 					}
 				}
 			}
-			$result = connection()->query($query, 1); // 1 - MYSQLI_USE_RESULT //! enum and set as numbers
+			$result = connection()->query($query, 1); // 1 - MYSQLI_USE_RESULT
 			if ($result) {
 				$insert = "";
 				$buffer = "";
@@ -919,7 +919,7 @@ class Adminer {
 	* @return string filename without extension
 	*/
 	function dumpFilename(string $identifier): string {
-		return friendly_url($identifier != "" ? $identifier : (SERVER != "" ? SERVER : "localhost"));
+		return friendly_url($identifier != "" ? $identifier : (SERVER ?: "localhost"));
 	}
 
 	/** Send headers for export
@@ -1132,6 +1132,20 @@ class Adminer {
 			}
 		}
 		echo "</ul>\n";
+	}
+
+	/** Get server variables
+	* @return list<string[]> [[$name, $value]]
+	*/
+	function showVariables(): array {
+		return show_variables();
+	}
+
+	/** Get status variables
+	* @return list<string[]> [[$name, $value]]
+	*/
+	function showStatus(): array {
+		return show_status();
 	}
 
 	/** Get process list

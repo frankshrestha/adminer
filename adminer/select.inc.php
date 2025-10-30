@@ -425,7 +425,7 @@ if (!$columns && support("table")) {
 						}
 
 						$link = "";
-						if (preg_match('~blob|bytea|raw|file~', $field["type"]) && $val != "") {
+						if (is_blob($field) && $val != "") {
 							$link = ME . 'download=' . urlencode($TABLE) . '&field=' . urlencode($key) . $unique_idf;
 						}
 						if (!$link && $val !== null) { // link related items
@@ -597,9 +597,10 @@ if (!$columns && support("table")) {
 				echo "<a href='#import'>" . lang('Import') . "</a>";
 				echo script("qsl('a').onclick = partial(toggle, 'import');", "");
 				echo "<span id='import'" . ($_POST["import"] ? "" : " class='hidden'") . ">: ";
-				echo "<input type='file' name='csv_file'> ";
-				echo html_select("separator", array("csv" => "CSV,", "csv;" => "CSV;", "tsv" => "TSV"), $adminer_import["format"]);
-				echo " <input type='submit' name='import' value='" . lang('Import') . "'>";
+				echo file_input("<input type='file' name='csv_file'> "
+					. html_select("separator", array("csv" => "CSV,", "csv;" => "CSV;", "tsv" => "TSV"), $adminer_import["format"])
+					. " <input type='submit' name='import' value='" . lang('Import') . "'>")
+				;
 				echo "</span>";
 			}
 

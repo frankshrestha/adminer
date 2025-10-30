@@ -128,6 +128,20 @@ function ini_bool(string $ini): bool {
 	return (preg_match('~^(on|true|yes)$~i', $val) || (int) $val); // boolean values set by php_value are strings
 }
 
+/** Get INI bytes value */
+function ini_bytes(string $ini): int {
+	$val = ini_get($ini);
+	switch (strtolower(substr($val, -1))) {
+		case 'g':
+			$val = (int) $val * 1024; // no break
+		case 'm':
+			$val = (int) $val * 1024; // no break
+		case 'k':
+			$val = (int) $val * 1024;
+	}
+	return $val;
+}
+
 /** Check if SID is necessary */
 function sid(): bool {
 	static $return;
@@ -230,7 +244,7 @@ function get_rows(string $query, ?Db $connection2 = null, string $error = "<p cl
 */
 function unique_array(?array $row, array $indexes) {
 	foreach ($indexes as $index) {
-		if (preg_match("~PRIMARY|UNIQUE~", $index["type"])) {
+		if (preg_match("~PRIMARY|UNIQUE~", $index["type"]) && !$index["partial"]) {
 			$return = array();
 			foreach ($index["columns"] as $key) {
 				if (!isset($row[$key])) { // NULL is ambiguous
@@ -643,7 +657,7 @@ function dump_headers(string $identifier, bool $multi_table = false): string {
 */
 function dump_csv(array $row): void {
 	foreach ($row as $key => $val) {
-		if (preg_match('~["\n,;\t]|^0|\.\d*0$~', $val) || $val === "") {
+		if (preg_match('~["\n,;\t]|^0.|\.\d*0$~', $val) || $val === "") {
 			$row[$key] = '"' . str_replace('"', '""', $val) . '"';
 		}
 	}
@@ -791,6 +805,13 @@ function select_value($val, string $link, array $field, ?string $text_length): s
 	return adminer()->selectVal($return, $link, $field, $val);
 }
 
+/** Check whether the field type is blob or equivalent
+* @param Field $field
+*/
+function is_blob(array $field): bool {
+	return preg_match('~blob|bytea|raw|file~', $field["type"]) && !in_array($field["type"], idx(driver()->structuredTypes(), lang('User types'), array()));
+}
+
 /** Check whether the string is e-mail address */
 function is_mail(?string $email): bool {
 	$atom = '[-a-z0-9!#$%&\'*+/=?^_`{|}~]'; // characters of local-name
@@ -810,6 +831,16 @@ function is_url(?string $string): bool {
 */
 function is_shortable(array $field): bool {
 	return preg_match('~char|text|json|lob|geometry|point|linestring|polygon|string|bytea|hstore~', $field["type"]);
+}
+
+/** Split server into host and (port or socket)
+* @return array{0: string, 1: string}
+*/
+function host_port(string $server) {
+	return (preg_match('~^(\[(.+)]|([^:]+)):([^:]+)$~', $server, $match) // [a:b] - IPv6
+		? array($match[2] . $match[3], $match[4])
+		: array($server, '')
+	);
 }
 
 /** Get query to compute number of found rows

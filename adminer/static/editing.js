@@ -93,6 +93,13 @@ function messagesPrint(parent) {
 	for (const el of qsa('.toggle', parent)) {
 		el.onclick = partial(toggle, el.getAttribute('href').substr(1));
 	}
+	for (const el of qsa('.copy', parent)) {
+		el.onclick = () => {
+			navigator.clipboard.writeText(qs('code', el.parentElement).innerText).then(() => el.textContent = '✓');
+			setTimeout(() => el.textContent = '🗐', 1000);
+			return false;
+		};
+	}
 }
 
 
@@ -384,7 +391,7 @@ function editingAddRow(focus) {
 */
 function editingRemoveRow(name) {
 	const field = formField(this.form, this.name.replace(/[^[]+(.+)/, name));
-	field.parentNode.removeChild(field);
+	field.remove();
 	parentTag(this, 'tr').style.display = 'none';
 	return false;
 }
@@ -456,7 +463,7 @@ function editingLengthChange() {
 */
 function editingLengthFocus() {
 	const td = this.parentNode;
-	if (/(enum|set)$/.test(selectValue(td.previousSibling.firstChild))) {
+	if (/^(enum|set)$/.test(selectValue(td.previousSibling.firstChild))) {
 		const edit = qs('#enum-edit');
 		edit.value = enumValues(this.value);
 		td.appendChild(edit);
@@ -655,24 +662,29 @@ function indexesAddColumn(prefix) {
 * @param string
 */
 function sqlSubmit(form, root) {
-	if (encodeURIComponent(form['query'].value).length < 500) {
-		form.action = root
-			+ '&sql=' + encodeURIComponent(form['query'].value)
-			+ (form['limit'].value ? '&limit=' + +form['limit'].value : '')
-			+ (form['error_stops'].checked ? '&error_stops=1' : '')
-			+ (form['only_errors'].checked ? '&only_errors=1' : '')
-		;
+	const action = root
+		+ '&sql=' + encodeURIComponent(form['query'].value)
+		+ (form['limit'].value ? '&limit=' + +form['limit'].value : '')
+		+ (form['error_stops'].checked ? '&error_stops=1' : '')
+		+ (form['only_errors'].checked ? '&only_errors=1' : '')
+	;
+	if ((document.location.origin + document.location.pathname + action).length < 2000) { // reasonable minimum is 2048
+		form.action = action;
 	}
 }
 
 /** Check if PHP can handle the uploaded files
+* @param Event
 * @param number
 * @param string
-* @param Event
+* @param number
+* @param string
 */
-function fileChange(event, maxFileUploads, message) {
-	if (event.target.files.length > maxFileUploads) {
-		alert(message);
+function fileChange(event, count, countMessage, size, sizeMessage) {
+	if (event.target.files.length > count) {
+		alert(countMessage);
+	} else if (Array.from(event.target.files).reduce((sum, file) => sum + file.size, 0) > size) {
+		alert(sizeMessage);
 	}
 }
 

@@ -72,6 +72,10 @@ function print_select_result($result, ?Db $connection2 = null, array $orgtables 
 				} else {
 					$link = ME . "edit=" . urlencode($links[$key]);
 					foreach ($indexes[$links[$key]] as $col => $j) {
+						if ($row[$j] === null) {
+							$link = "";
+							break;
+						}
 						$link .= "&where" . urlencode("[" . bracket_escape($col) . "]") . "=" . urlencode($row[$j]);
 					}
 				}
@@ -314,7 +318,7 @@ function edit_fields(array $fields, array $collations, $type = "TABLE", array $f
 		echo "<tr" . ($display ? "" : " style='display: none;'") . ">\n";
 		echo ($type == "PROCEDURE" ? "<td>" . html_select("fields[$i][inout]", explode("|", driver()->inout), $field["inout"]) : "") . "<th>";
 		if ($display) {
-			echo "<input name='fields[$i][field]' value='" . h($field["field"]) . "' data-maxlength='64' autocapitalize='off' aria-labelledby='label-name'>";
+			echo "<input name='fields[$i][field]' value='" . h($field["field"]) . "' data-maxlength='64' autocapitalize='off' aria-labelledby='label-name'" . (isset($_POST["add"][$i-1]) ? " autofocus" : "") . ">";
 		}
 		echo input_hidden("fields[$i][orig]", $orig);
 		edit_type("fields[$i]", $field, $collations, $foreign_keys);
@@ -505,20 +509,6 @@ function tar_file(string $filename, $tmp_file): void {
 	echo str_repeat("\0", 512 - strlen($return));
 	$tmp_file->send();
 	echo str_repeat("\0", 511 - ($tmp_file->size + 511) % 512);
-}
-
-/** Get INI bytes value */
-function ini_bytes(string $ini): int {
-	$val = ini_get($ini);
-	switch (strtolower(substr($val, -1))) {
-		case 'g':
-			$val = (int) $val * 1024; // no break
-		case 'm':
-			$val = (int) $val * 1024; // no break
-		case 'k':
-			$val = (int) $val * 1024;
-	}
-	return $val;
 }
 
 /** Create link to database documentation

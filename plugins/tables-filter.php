@@ -21,8 +21,7 @@ function tablesFilter() {
 	tablesFilterValue = value;
 	let reg;
 	if (value != '') {
-		reg = (value + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, '\\$1');
-		reg = new RegExp('('+ reg + ')', 'gi');
+		reg = new RegExp('(' + value + ')', 'gi');
 	}
 	if (sessionStorage) {
 		sessionStorage.setItem('adminer_tables_filter', value);
@@ -43,15 +42,20 @@ function tablesFilter() {
 			table.className = '';
 			a.innerHTML = text;
 		} else {
-			table.className = (text.toLowerCase().indexOf(value) == -1 ? 'hidden' : '');
+			table.className = text.match(reg) ? '' : 'hidden';
 			a.innerHTML = text.replace(reg, '<strong>$1</strong>');
 		}
 	}
+	updateTableCount();
 }
 
 function tablesFilterInput() {
 	window.clearTimeout(tablesFilterTimeout);
 	tablesFilterTimeout = window.setTimeout(tablesFilter, 200);
+}
+
+function updateTableCount() {
+	qs('#table-count').innerText = qsa('li:not(.hidden)', qs('#tables')).length;
 }
 
 sessionStorage && document.addEventListener('DOMContentLoaded', () => {
@@ -62,9 +66,15 @@ sessionStorage && document.addEventListener('DOMContentLoaded', () => {
 		tablesFilter();
 	}
 	sessionStorage.setItem('adminer_tables_filter_db', db);
+	updateTableCount();
 });
 </script>
-<p class="jsonly"><?php echo $this->lang('Filter'); ?>: <input id="filter-field" autocomplete="off" type="search"><?php echo Adminer\script("qs('#filter-field').oninput = tablesFilterInput;"); ?>
+<p class="jsonly">
+	<span style="display: flex; gap: 8px;">
+		<input id="filter-field" autocomplete="off" type="search" style="flex-grow: 1;">
+		<span id="table-count" style="width: 30px;">
+	</span>
+<?php echo Adminer\script("qs('#filter-field').oninput = tablesFilterInput;"); ?>
 <?php
 	}
 

@@ -621,7 +621,7 @@ class Adminer {
 
 	/** Process limit box in select */
 	function selectLimitProcess(): int {
-		return (isset($_GET["limit"]) ? intval($_GET["limit"]) : 50);
+		return (isset($_GET["limit"]) ? intval($_GET["limit"]) : 100);
 	}
 
 	/** Process length box in select

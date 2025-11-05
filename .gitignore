@@ -10,3 +10,4 @@
 /vendor/
 adminer-plugins/
 adminer-plugins.php
+.vscode/

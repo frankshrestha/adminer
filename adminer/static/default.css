@@ -7,7 +7,7 @@ html {
 	--lit: #ddf;
 }
 
-body { color: var(--fg); background: var(--bg); font: 90%/1.25 Verdana, Arial, Helvetica, sans-serif; margin: 0; }
+body { color: var(--fg); background: var(--bg); background-image: url(bg.png); font: 90%/1.25 Verdana, Arial, Helvetica, sans-serif; margin: 0; }
 a { color: blue; text-decoration: none; }
 a:visited { color: navy; }
 a:link:hover, a:visited:hover { color: red; text-decoration: underline; }

@@ -38,6 +38,7 @@ function page_header(string $title, string $error = "", $breadcrumb = array(), s
 		? ($has_dark ? null : false) // both styles - autoswitching, only adminer.css - light
 		: ($has_dark ?: null) // only adminer-dark.css - dark, neither - autoswitching
 	);
+	$dark = false;
 	$media = " media='(prefers-color-scheme: dark)'";
 	if ($dark !== false) {
 		echo "<link rel='stylesheet'" . ($dark ? "" : $media) . " href='../adminer/static/dark.css'>\n";

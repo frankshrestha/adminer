@@ -80,7 +80,7 @@ sessionStorage && document.addEventListener('DOMContentLoaded', () => {
 </script>
 <p class="jsonly">
 	<span style="display: flex; gap: 8px;">
-		<input id="filter-field" autocomplete="off" type="search" style="flex-grow: 1;">
+		<input id="filter-field" autocomplete="off" accesskey="F" type="search" style="flex-grow: 1;">
 		<span id="table-count" style="width: 30px;">
 	</span>
 <?php echo Adminer\script("qs('#filter-field').oninput = tablesFilterInput;"); ?>

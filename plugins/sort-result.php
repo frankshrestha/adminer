@@ -70,12 +70,16 @@ class AdminerSortResult
 	function tablesPrint(array $tables): bool
 	{
 		echo "<ul id='tables'>";
+		$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
 		foreach ($tables as $table => $status) {
 			$table = "$table"; // do not highlight "0" as active everywhere
 			$name = adminer()->tableName($status);
 			if ($name != "" && !$status["partition"]) {
-				echo '<li><a href="' . h(ME) . 'select=' . urlencode($table)
+				$shouldHide = $filter && !preg_match("~$filter~i", $table);
+				echo '<li' . ($shouldHide ? ' class="hidden"' : '') . '>'
+					. '<a href="' . h(ME) . 'select=' . urlencode($table)
 					. '&order[0]=' . $this->sortKey
+					. '&filter=' . ($filter ? urlencode($filter) : '')
 					. ($this->desc ? '&desc[0]=1' : '') . '"'
 					. bold($_GET["select"] == $table || $_GET["edit"] == $table, "select")
 					. " title='" . lang('Select data') . "'>" . lang('select') . "</a> ";

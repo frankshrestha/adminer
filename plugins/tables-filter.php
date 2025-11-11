@@ -38,6 +38,7 @@ function tablesFilter() {
 		} else {
 			a = qs('a[data-link="main"]', table);
 		}
+		updateSelectURL(table, value);
 		if (value == '') {
 			table.className = '';
 			a.innerHTML = text;
@@ -47,6 +48,14 @@ function tablesFilter() {
 		}
 	}
 	updateTableCount();
+}
+
+function updateSelectURL(table, value) {
+	const a = table.firstChild;
+	const url = new URL(a.href);
+
+	url.searchParams.set('filter', value);
+	a.href = url.search;
 }
 
 function tablesFilterInput() {

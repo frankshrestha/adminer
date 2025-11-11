@@ -7,7 +7,7 @@ html {
 	--lit: #ddf;
 }
 
-body { color: var(--fg); background: var(--bg); font: 90%/1.25 Verdana, Arial, Helvetica, sans-serif; margin: 0; min-width: fit-content; }
+body { color: var(--fg); background: var(--bg); font: 90%/1.25 Verdana, Arial, Helvetica, sans-serif; margin: 0; }
 a { color: blue; text-decoration: none; }
 a:visited { color: navy; }
 a:link:hover, a:visited:hover { color: red; text-decoration: underline; }
@@ -18,9 +18,9 @@ h2 { font-size: 150%; margin: 0 0 20px -18px; padding: .8em 1em; border-bottom: 
 h3 { font-weight: normal; font-size: 130%; margin: 1em 0 0; }
 form { margin: 0; }
 td table { width: 100%; margin: 0; }
-table { margin: 1em 20px 0 0; font-size: 90%; border-spacing: 0; border-width: 1px 0 0 1px; }
+table { font-size: 90%; border-spacing: 0; border-width: 1px 0 0 1px; }
 table, td, th { border-color: #999; border-style: solid; }
-td, th { border-width: 0 1px 1px 0; padding: .2em .3em; margin: 0; }
+td, th { border-width: 0 1px 1px 0; padding: .2em .3em; }
 th { background: var(--dim); text-align: left; }
 thead { position: sticky; top: 0; }
 thead th { text-align: center; padding: .2em .5em; }
@@ -74,8 +74,8 @@ input.wayoff { left: -1000px; position: absolute; }
 .icon:hover { background-color: red; }
 .size { width: 7ex; }
 .help { cursor: help; }
-.footer { position: sticky; bottom: 0; margin: 23px -20px .5em 0; box-shadow: 0 -5px 10px 10px var(--bg); }
-.footer > div { background: var(--bg); padding: 0 0 .5em; }
+.footer { position: sticky; bottom: 0; margin-top: 8px; }
+.footer > div { background: var(--bg); }
 .footer fieldset { margin-top: 0; }
 .links a { white-space: nowrap; margin-right: 20px; }
 .logout { margin-top: .5em; position: absolute; top: 0; right: 0; background-color: var(--bg); box-shadow: 0 0 5px 5px var(--bg); }
@@ -87,7 +87,7 @@ input.wayoff { left: -1000px; position: absolute; }
 #dbs { overflow: hidden; }
 #logins, #tables { white-space: nowrap; overflow: hidden; }
 #logins a, #tables a, #tables span { background: var(--bg); }
-#content { margin: 2em 0 0 21em; padding: 10px 20px 20px 0; }
+#content { margin: 2em 0 0 21em; padding: 10px 10px 10px 0; }
 #lang { position: absolute; top: -2.6em; left: 0; padding: .3em 1em; }
 #menuopen { display: none; }
 #breadcrumb { white-space: nowrap; position: absolute; top: 0; left: 21em; background: var(--dim); height: 2em; line-height: 1.8em; padding: 0 1em; margin: 0 0 0 -18px; }
@@ -147,3 +147,6 @@ input.wayoff { left: -1000px; position: absolute; }
 
 ul#tables { max-height: calc(100vh - 300px); overflow: auto; }
 fieldset select, input { margin: 0 2px; }
+.scrollable { max-height: calc(100vh - 376px); overflow: auto; margin-top: 12px; }
+.scrollable table { border-top: 0; }
+.scrollable thead:before { content: ''; position: absolute; width: 100%; border-top: 1px solid #999; }

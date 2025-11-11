@@ -854,18 +854,38 @@ addEvent(document, 'click', event => {
 	}
 });
 
-function copyColumnName(event, columnName) {
+/**
+ * @param string
+ */
+function copyToClipboard(content) {
+	localStorage.setItem('content', content);
 
-	event.preventDefault();
-	columnName = `\`${columnName}\``;
-
-	if (!navigator.clipboard?.writeText(columnName)) {
+	if (!navigator.clipboard?.writeText(content)) {
 		const input = document.createElement('input');
 
-		input.value = columnName;
+		input.value = content;
 		document.body.appendChild(input);
 		input.select();
 		document.execCommand('copy');
 		document.body.removeChild(input);
 	}
+}
+
+/** Copy column name
+ * @param MouseEvent
+ * @param string
+ */
+async function copyColumnName(event, fieldName) {
+	event.preventDefault();
+
+	if (event.shiftKey && event.altKey) {
+		const content = localStorage.getItem('content') || '';
+		const quote = ['`', `'`].includes(content[0]) ? content[0] : '';
+
+		return copyToClipboard(`${content}, ${quote}${fieldName}${quote}`);
+	}
+
+	const quote = event.shiftKey ? `'` : event.altKey ? '`' : '';
+
+	return copyToClipboard(`${quote}${fieldName}${quote}`);
 }

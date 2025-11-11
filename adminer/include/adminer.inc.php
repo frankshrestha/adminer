@@ -391,7 +391,7 @@ class Adminer {
 	* @param string[] $columns selectable columns
 	*/
 	function selectColumnsPrint(array $select, array $columns): void {
-		print_fieldset("select", lang('Select'), $select);
+		print_fieldset("select", lang('Select'), true);
 		$i = 0;
 		$select[""] = array();
 		foreach ($select as $key => $val) {
@@ -417,7 +417,7 @@ class Adminer {
 	* @param Index[] $indexes
 	*/
 	function selectSearchPrint(array $where, array $columns, array $indexes): void {
-		print_fieldset("search", lang('Search'), $where);
+		print_fieldset("search", lang('Search'), true);
 		foreach ($indexes as $i => $index) {
 			if ($index["type"] == "FULLTEXT") {
 				echo "<div>(<i>" . implode("</i>, <i>", array_map('Adminer\h', $index["columns"])) . "</i>) AGAINST";
@@ -452,7 +452,7 @@ class Adminer {
 	* @param Index[] $indexes
 	*/
 	function selectOrderPrint(array $order, array $columns, array $indexes): void {
-		print_fieldset("sort", lang('Sort'), $order);
+		print_fieldset("sort", lang('Sort'), true);
 		$i = 0;
 		foreach ((array) $_GET["order"] as $key => $val) {
 			if ($val != "") {

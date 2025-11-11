@@ -25,7 +25,7 @@ class AdminerSortResult
 	 */
 	function selectOrderPrint(array $order, array $columns, array $indexes): bool
 	{
-		print_fieldset("sort", lang('Sort'), $order);
+		print_fieldset("sort", lang('Sort'), true);
 		$i = 0;
 		foreach ((array) $_GET["order"] as $key => $val) {
 

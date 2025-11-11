@@ -580,7 +580,7 @@ if (!$columns && support("table")) {
 					}
 				}
 				if ($format) {
-					print_fieldset("export", lang('Export') . " <span id='selected2'></span>");
+					print_fieldset("export", lang('Export') . " <span id='selected2'></span>", true);
 					$output = adminer()->dumpOutput();
 					echo ($output ? html_select("output", $output, $adminer_import["output"]) . " " : "");
 					echo html_select("format", $format, $adminer_import["format"]);

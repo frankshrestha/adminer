@@ -146,3 +146,4 @@ input.wayoff { left: -1000px; position: absolute; }
 }
 
 ul#tables { max-height: calc(100vh - 300px); overflow: auto; }
+fieldset select, input { margin: 0 2px; }

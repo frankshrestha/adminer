@@ -881,7 +881,7 @@ function copyFields(event, match) {
 			break;
 
 		default:
-			content = fields.map(f => '`' + f + '`').join(', ');
+			content = fields.map(f => '`' + f + '`').join(',\u0020');
 			break;
 	}
 	copyToClipboard(content);
@@ -915,7 +915,7 @@ async function copyColumnName(event, fieldName) {
 		const content = localStorage.getItem('content') || '';
 		const quote = ['`', `'`].includes(content[0]) ? content[0] : '';
 
-		return copyToClipboard(`${content}, ${quote}${fieldName}${quote}`);
+		return copyToClipboard(`${content},\u0020${quote}${fieldName}${quote}`);
 	}
 
 	const quote = event.shiftKey ? `'` : event.altKey ? '`' : '';

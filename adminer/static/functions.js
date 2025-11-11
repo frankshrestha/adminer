@@ -884,13 +884,14 @@ function copyFields(event, match) {
 			content = fields.map(f => '`' + f + '`').join(',\u0020');
 			break;
 	}
-	copyToClipboard(content);
+	copyToClipboard(event.srcElement, content);
 }
 
 /**
  * @param string
  */
-function copyToClipboard(content) {
+function copyToClipboard(element, content) {
+	element.textContent = '💥';
 	localStorage.setItem('content', content);
 
 	if (!navigator.clipboard?.writeText(content)) {
@@ -902,6 +903,7 @@ function copyToClipboard(content) {
 		document.execCommand('copy');
 		document.body.removeChild(input);
 	}
+	setTimeout(() => element.textContent = '📋', 500);
 }
 
 /** Copy column name
@@ -915,10 +917,10 @@ async function copyColumnName(event, fieldName) {
 		const content = localStorage.getItem('content') || '';
 		const quote = ['`', `'`].includes(content[0]) ? content[0] : '';
 
-		return copyToClipboard(`${content},\u0020${quote}${fieldName}${quote}`);
+		return copyToClipboard(event.srcElement, `${content},\u0020${quote}${fieldName}${quote}`);
 	}
 
 	const quote = event.shiftKey ? `'` : event.altKey ? '`' : '';
 
-	return copyToClipboard(`${quote}${fieldName}${quote}`);
+	return copyToClipboard(event.srcElement, `${quote}${fieldName}${quote}`);
 }

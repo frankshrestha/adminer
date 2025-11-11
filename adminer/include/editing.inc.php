@@ -54,7 +54,8 @@ function print_select_result($result, ?Db $connection2 = null, array $orgtables 
 				}
 				$types[$j] = $field->type;
 				echo "<th" . ($orgtable != "" || $field->name != $orgname ? " title='" . h(($orgtable != "" ? "$orgtable." : "") . $orgname) . "'" : "") . ">" . h($name);
-				echo "<a href='#' title='" . lang('Copy') . "' class='text'> &#128203</a>";
+				echo '<span class="column">';
+				echo "<a href='#' title='" . lang('Copy') . "' class='text'>📋</a>";
 				echo script("qsl('a').onclick = partialArg(copyColumnName, '" . js_escape($name) . "');", "");
 				echo ($orgtables ? doc_link(array(
 						'sql' => "explain-output.html#explain_" . strtolower($name),

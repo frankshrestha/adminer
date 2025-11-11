@@ -121,7 +121,8 @@ const thousandsSeparator = '" . js_escape(lang(',')) . "';")
 	$show = isset($_GET['select']) ? 'select' : (isset($_GET['table']) ? 'table' : null);
 
 	if ($show) {
-		echo '<a href="#" title="' . lang('Copy') . '" class="text"> &#128203</a>';
+		echo '<span class="column">';
+		echo '<a href="#" title="' . lang('Copy') . '" class="text">📋</a>';
 		echo script('qsl("a").onclick = partialArg(copyFields, ' . "'{$show}');", '');
 	}
 	echo "</h2>\n";
